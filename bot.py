@@ -35,11 +35,6 @@ async def send_start(message: types.Message):
 async def start(message: types.Message):
     await send_start(message)
 
-# любое сообщение = как старт
-@dp.message_handler()
-async def all_messages(message: types.Message):
-    await send_start(message)
-
 # /terms
 @dp.message_handler(commands=['terms'])
 async def terms(message: types.Message):
@@ -62,6 +57,11 @@ async def terms(message: types.Message):
         "Ознакомьтесь с условиями использования нашего приложения прежде чем продолжить.",
         reply_markup=keyboard
     )
+
+# ЛОВИТ ТОЛЬКО НЕ команды
+@dp.message_handler(lambda message: not message.text.startswith('/'))
+async def all_messages(message: types.Message):
+    await send_start(message)
 
 if __name__ == "__main__":
     print("Бот запущен 🚀")
